@@ -1,0 +1,26 @@
+{
+  "name": "final_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "astronauts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XavierElon1/rocket_api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XavierElon1/rocket_api/issues"
+  },
+  "homepage": "https://github.com/XavierElon1/rocket_api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.3",
+    "jwks-rsa": "^1.8.0"
+  }
+}
