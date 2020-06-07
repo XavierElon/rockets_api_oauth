@@ -2,7 +2,7 @@ const express = require("express");
 const router = require('express').Router();
 const bodyParser = require("body-parser");
 const ds = require("./datastore");
-
+const constants = require('./constants')
 const datastore = ds.datastore
 
 const ASTRONAUTS = 'Astronauts'
@@ -121,14 +121,31 @@ router.get('/', function(req, res) {
     })
 })
 
+router.get('/:id', function(req, res) {
+    var id = req.params.id
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
+    }
+    get_astronaut(id).then((astronaut) => {
+        if (astronaut[0] == null) {
+            res.status(404).json({ Error: constants.NOT_FOUND })
+        } else {
+            res.status(200).json(astronaut)
+        }
+    })
+})
+
 router.post('/', function(req, res) {
     var selfUrl = `${baseUrl}/astronauts`
-    console.log(req.body)
     if (req.body.name == null || req.body.age == null || req.body.sex == null) {
         res.status(400).json({ Error: 'The request object is missing at least one of the required attributes.' })
     }
-    if (req.get('content-type') != 'application/json') {
-        res.status(415).send('Can only accept application/json data type')
+    const authorization = req.get('Authorization')
+    if (!authorization) {
+        return res.status(401).json({ Error: constants.INVALID_JWT })
+    } 
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
     } else {
         post_astronaut(req.body.name, req.body.age, req.body.sex)
         .then( key => {
@@ -277,9 +294,6 @@ router.delete('/:id/rockets', function (req, res) {
     var id = req.params.id
     console.log(id)
     var selfUrl = `${baseUrl}/astronauts/${id}`
-    if (req.get('content-type') != 'application/json') {
-        res.status(415).send('Can only accept application/json data type')
-    }
     get_astronaut(id).then((astronaut) => {
         if (astronaut[0] == null) {
             res.status(404).send('An astronaut with this id does not exist.')

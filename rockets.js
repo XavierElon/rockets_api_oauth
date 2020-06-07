@@ -150,7 +150,23 @@ router.get('/', checkJwt, function(req,res) {
 })
 
 router.get('/:id', checkJwt, function(req, res) {
-
+    var id = req.params.id
+    const authorization = req.get('Authorization')
+    if (!authorization) {
+        return res.status(401).json({ Error: constants.INVALID_JWT })
+    }
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
+    }
+    get_rocket(id).then((rocket) => {
+        if (rocket[0] == null) {
+            res.status(404).json({ Error: constants.NOT_FOUND })
+        } else if (rocket[0].ownerID != req.user.name) {
+            res.status(403).json({ Error: constants.FORBIDDEN })
+        } else {
+            res.status(200).json(rocket)
+        }
+    })
 })
 
 router.post('/', checkJwt, function(req, res) {
@@ -182,10 +198,10 @@ router.patch('/:id', checkJwt, function(req, res) {
     if (req.get('allow') != 'application/json') {
         res.status(405).json({ Error: constants.NOT_ALLOWED})
     }
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
+    }
     get_rocket(id).then((rocket) => {
-        console.log(rocket)
-        var astronauts = rocket[0].astronauts
-        console.log(astronauts)
         if (rocket[0] == null) {
             res.status(404).json({ Error: constants.NOT_FOUND })
         } else if (rocket[0].ownerID != req.user.name) {
@@ -201,6 +217,7 @@ router.patch('/:id', checkJwt, function(req, res) {
             if (req.body.weight == null) {
                 req.body.weight = rocket[0].weight
             }
+            var astronauts = rocket[0].astronauts
             patch_rocket(id, req.body.name, req.body.price, req.body.weight, astronauts, req.user.name).then((key) => {
                 console.log(key)
                 res.status(200).json({ id: key.id, name: req.body.name, price: req.body.price, weight: req.body.weight, astronauts: astronauts, self: selfUrl, ownerID: req.user.name })
@@ -212,8 +229,12 @@ router.patch('/:id', checkJwt, function(req, res) {
 router.put('/:id', checkJwt, function(req, res) {
     var id = req.params.id
     var selfUrl = `${baseUrl}/rockets/${id}`
-    if (req.get('content-type') != 'application/json') {
-        res.status(415).send('Can only accept application/json data type')
+    const authorization = req.get('Authorization')
+    if (!authorization) {
+        return res.status(401).json({ Error: constants.INVALID_JWT })
+    }
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
     }
     get_rocket(id).then((rocket) => {
         console.log(rocket)
@@ -235,14 +256,20 @@ router.put('/:id', checkJwt, function(req, res) {
 router.delete('/:id', checkJwt, function(req, res) {
     var id = req.params.id
     var astronaut_id
-    console.log(id)
+    const authorization = req.get('Authorization')
+    if (!authorization) {
+        return res.status(401).json({ Error: constants.INVALID_JWT })
+    }
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).json({ Error: constants.NOT_ACCEPTABLE })
+    }
     get_rocket(id).then((rocket) => {
-        var astronauts = rocket[0].astronauts
         if (rocket[0] == null) {
             res.status(404).send('A rocket with this rocket id does not exist.')
         } else if (rocket[0].ownerID != req.user.name) {
             res.status(403).send('This rocket is owned by someone else')
         } else {
+            var astronauts = rocket[0].astronauts
             for (i = 0; i < astronauts.length; i++) {
                 astronaut_id = astronauts[i]
                 get_astronaut(astronaut_id).then((astronaut) => {
