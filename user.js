@@ -3,33 +3,20 @@ const app = express()
 const ds = require('./datastore')
 const bodyParser = require('body-parser')
 const request = require('request')
-const jwt = require('express-jwt')
-const jwksRsa = require('jwks-rsa')
 const router = require('express').Router();
 var urlencodedParser = bodyParser.urlencoded({ extended: false});
 var path = require('path')
 const datastore = ds.datastore
+require("dotenv").config();
 
 const USERS = 'users'
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
-const projectID = 'final-project-hollingx'
-const clientID = 'A7f7F2NrV0Lrrqbr887gQu2EtH32yk1Q'
-const clientSecret = '4HLsNrMjwRlyjwW3ynURnzTlfaO4yrv5y28lwPYaG5hURAsJaeZcFGE83m6ayKuH'
+const clientID = process.env.CLIENT_ID
+const clientSecret = process.env.CLIENT_SECRET
 
-// module.exports.checkJwt = checkJwt = jwt({
-//     secret: jwksRsa.expressJwtSecret({
-//         cache: true,
-//         rateLimit: true,
-//         jwksRequestsPerMinute: 5,
-//         jwksUri: `https://xavierelon1.auth0.com/.well-known/jwks.json`
-//     }),
-//     audience:clientID,
-//     issuer: `https://xavierelon1.auth0.com/`,
-//     algorithms: ['RS256']
-// })
 
 
 function get_users(req) {
@@ -74,7 +61,7 @@ router.post('/signup', urlencodedParser, function(req, res) {
     } else {
         connection = req.body.connection
     }
-
+    console.log('hi')
     var options = {
         method: 'POST',
         url: 'https://xavierelon1.auth0.com/dbconnections/signup',
@@ -91,6 +78,7 @@ router.post('/signup', urlencodedParser, function(req, res) {
         },
         json: true
     };
+    console.log('hi')
     request (options, (error, response, body) => {
         if (error) {
             console.log('error')
@@ -110,6 +98,7 @@ router.post('/signup', urlencodedParser, function(req, res) {
                 },
                 json: true
             };
+            console.log('3')
             request(options2, (error, response, body) => {
                 if (error) {
                     res.status(500).send(error)
@@ -117,9 +106,7 @@ router.post('/signup', urlencodedParser, function(req, res) {
                     console.log(body)
                     console.log(body.id_token)
                     post_user(email)
-                    // checkJwt (function (req,res) {
-                    //     console.log(req.user)
-                    // })
+                   
                     var data = { JWT: body.id_token, username: email }
                     res.render('dataDisplay', { data: data })
                 }
@@ -127,6 +114,8 @@ router.post('/signup', urlencodedParser, function(req, res) {
         }
     })
 })
+
+
 
 // Login a user
 router.post('/login', urlencodedParser, function(req, res) {
@@ -156,6 +145,39 @@ router.post('/login', urlencodedParser, function(req, res) {
             console.log(body.id_token)
             var data = { JWT: body.id_token, username: username }
             res.render('dataDisplay', { data: data })
+        }
+    })
+})
+
+
+// Login a user for Postman
+router.post('/login/postman', urlencodedParser, function(req, res) {
+    console.log(req.body)
+    console.log(req.user)
+    const username = req.body.username
+    const password = req.body.password
+    
+    var options = {
+        method: 'POST',
+        url: 'https://xavierelon1.auth0.com/oauth/token',
+        headers: {'content-type': 'application/json'},
+        body: {
+            grant_type: 'password',
+            username: username,
+            password: password,
+            client_id: clientID,
+            client_secret: clientSecret
+        },
+        json: true
+    };
+    request(options, (error, response, body) => {
+        if(error) {
+            res.status(500).send(error)
+        } else {
+            console.log(body)
+            console.log(body.id_token)
+            var data = { JWT: body.id_token, username: username }
+            res.status(200).json({ token: body.id_token })
         }
     })
 })

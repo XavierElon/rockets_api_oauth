@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hollingx-final",
+  "private_key_id": "8f01c4fd4a4af185236f4328d4d362ea534b6c9a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCpfXPOwzclSYaA\niBD6naddfEbL2pRTzt36Ji41O16n5kjq9JNdWvtmuIij0W8PQPO5MV62Jwc0g/Ko\nNgGhpIR5km+6ZTBopLa6jYskvI966wJahHIlp3hyS3qTDvFFBLmf1fW8H5Q8+l1G\n87hwIfe5PG6a24Gn8H5l4I62gQoioN5TSrj/xA2J+bLckm0O2QsrjfogM06G6dDB\nn0jFNUtWekzLNpXe4taMZ1OtTSvvpZ4BWddzYsvEnjTAz1YhmIHt3lVRkF07C67U\nyMMgQeuE1fG9m6BKbGYU2N2w1RUWk6yUNobFzbQEYFRbtMtSuJClqAasVMtct024\nXAF7MIe1AgMBAAECggEAAMuVZQV2d0bSijzZM4vU0rP4ExHJ+2CvmvJd6iMGrSv/\n8JZIMLpyDofUIEylxEEOQ7KvGpSxTHZIB7EFLfB7LKTawFmkMgF/1/09B2WZGL8M\nikcvz+xqvMKM5y69RBEjG9RhrEnLpMOZ93DCT0hhhK17aV+ZSqPuu+SjVsjhNstf\nefpPqr9jroTDsas/DEQGRRuqpHfjB2peUNR8C7K/NcDHpX3REcf785pTk0Q+/2uu\ngjGohE0aM5zGPd5C1qVFHjG2KEVzXm0AzAhzijAwgNsc6qtTGc1S+Y4CuWZP0dUG\nVJIZ9voxSbB/LutfqcXEEPWYMcCD/40Ye6B3hCQXGwKBgQDfzBXvWdIMn2OJuFSP\nAovL3KqotBvqt4KeHeeTLuFItyHAMcLzE8q9RSTAEneM/QHz1gnPPob+3odLzWNU\no6aKvDgWtHzhriP770HgJVrO1c7IG0QvqtWluQI/VBg95rH+TJPqUavdObwZFmIa\n1iucyVbPLVlbUF39dNbpLul2DwKBgQDB4OD/tox+tBnwK14nt1MLlN9c9xkOpDKO\nd8KitA4nq20Hlib+SgJCamkj+Dm4M20xjqjvrk6vlPBRus7nWGQ3vny+AON++7yj\ndwLfHhgSPUrJPjz9oVEBZWyoAsuksyIQ2qG/xSwGV+7ZGmaZ4wJ44FiU3bb2cdaU\nWF/tv+jJ+wKBgCGv7clWouilgW00ov3X60UnlUTJv74IG5BDfh1InD6+2kS8+NRw\nMT9mTg7feMFvQED9AgMBLX7l7kW5x+7wp1wQ0vyP9JBgDyiYLjlYRiAGTRcQC6aF\nN523iKARv4hp1ncp/cXyv0UQsMCx/th9TplOMVQERoQZR9ykHsmA90F/AoGAFRPy\nwjpBegDwlPjSCrVWlPrBceT3V20ohe6lPXUf2NY9S0baxGidaEUTWzLAa7NDmtCs\nsyobKeGiYvBRUDt+4cSW4T1Nfl+1+XuV11X5Pfpl6A0ZKmXgXat+LaHoK+bBvF1Y\nmnXAPIxQzk+defuBKE0TtFOKca6cqpIVE876awMCgYEAuKy1X5NnnLQWEGrqtZYV\nLu5VLvKe5jHgHBZJKiITWDyz0KpbIq5sIybqPKEfKAwgUcx3YMRQ3WyW+zplVbHV\nWfkId7FHG1bflZOCvZpGlc624hBpF5yeqvrPI0mOxdYcT8Wk2vClLkZiiuAPr0bw\nvZcXWRFpaSebLPM1KHN2IMw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "xavierelon@hollingx-final.iam.gserviceaccount.com",
+  "client_id": "109585519764490124195",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/xavierelon%40hollingx-final.iam.gserviceaccount.com"
+}

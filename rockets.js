@@ -4,14 +4,13 @@ const bodyParser = require("body-parser");
 const ds = require("./datastore");
 const jwt = require('express-jwt')
 const jwksRsa = require('jwks-rsa')
+const constants = require('./constants')
 
 const datastore = ds.datastore
 
 const ASTRONAUTS = 'Astronauts'
 const ROCKETS = 'Rockets'
-const projectID = 'final-project-hollingx'
-const clientID = 'A7f7F2NrV0Lrrqbr887gQu2EtH32yk1Q'
-const clientSecret = '4HLsNrMjwRlyjwW3ynURnzTlfaO4yrv5y28lwPYaG5hURAsJaeZcFGE83m6ayKuH'
+const clientID = process.env.CLIENT_ID
 
 router.use(bodyParser.json())
 
@@ -34,12 +33,12 @@ function get_astronaut(id) {
     return datastore.get(key)
 }
 
-function patch_astronaut(id, name, age, sex, rocketName) {
+function patch_astronaut(id, name, age, sex, rocket) {
     const key = datastore.key([ASTRONAUTS, parseInt(id, 10)])
-    const astronaut = { name: name, age: age, sex: sex, rocketName: rocketName  }
+    const astronaut = { name: name, age: age, sex: sex, rocket: rocket  }
     return datastore.update({ key: key, data: astronaut }).then(() => {
         var selfUrl = `${baseUrl}/astronauts/${key.id}`
-        const new_data = { name: name, age: age, sex: sex, rocketName: rocketName, self: selfUrl }
+        const new_data = { name: name, age: age, sex: sex, rocket: rocket, self: selfUrl }
         datastore.update({ key: key, data: new_data }).then(() => {
         })
         return key
@@ -148,11 +147,15 @@ router.get('/', checkJwt, function(req,res) {
 
 router.post('/', checkJwt, function(req, res) {
     console.log(req.body)
+    console.log(req.user)
+    const authorization = req.get('Authorization')
+    // if (!authorization) {
+    //     return res.status(401).json({ Error: constants.INVALID_JWT })
+    // }
     var selfUrl = `${baseUrl}/rockets`
-    if (req.get('content-type') != 'application/json') {
-        res.status(415).send('Can only accept application/json data type')
+    if (req.get('Accept') != 'application/json') {
+        res.status(406).send('Can only accept application/json data type')
     } else {
-        console.log(req.user)
         post_rocket(req.body.name, req.body.price, req.body.weight, req.user.name)
         .then( key => {
             res.status(201).json({ id : key.id, name : req.body.name, price: req.body.price, weight: req.body.weight, ownerID: req.user.name, self: `${selfUrl}/${key.id}` })

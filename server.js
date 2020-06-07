@@ -2,19 +2,16 @@ const express = require('express')
 const app = express()
 const {Datastore} = require('@google-cloud/datastore')
 const bodyParser = require('body-parser')
-const request = require('request')
-
 var path = require('path')
 const router = express.Router()
-const ds = require('./datastore')
 
 const rocketRouter = require('./rockets')
 const astronautRouter = require('./astronauts')
 const userRouter = require('./user')
 
-const projectID = 'final-project-hollingx'
-const datastore = new Datastore({projectID:projectID})
 app.use(bodyParser.json())
+
+require("dotenv").config();
 
 
 app.use('/static', express.static('public'))

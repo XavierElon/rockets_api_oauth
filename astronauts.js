@@ -80,12 +80,12 @@ function get_astronauts(req) {
     })
 }
 
-function patch_astronaut(id, name, age, sex, rocketName) {
+function patch_astronaut(id, name, age, sex, rocket) {
     const key = datastore.key([ASTRONAUTS, parseInt(id, 10)])
-    const astronaut = { name: name, age: age, sex: sex, rocketName: rocketName  }
+    const astronaut = { name: name, age: age, sex: sex, rocket: rocket  }
     return datastore.update({ key: key, data: astronaut }).then(() => {
         var selfUrl = `${baseUrl}/astronauts/${key.id}`
-        const new_data = { name: name, age: age, sex: sex, rocketName: rocketName, self: selfUrl }
+        const new_data = { name: name, age: age, sex: sex, rocket: rocket, self: selfUrl }
         datastore.update({ key: key, data: new_data }).then(() => {
         })
         return key
@@ -93,12 +93,12 @@ function patch_astronaut(id, name, age, sex, rocketName) {
 }
 
 
-function put_astronaut(id, name, age, sex, rocketName) {
+function put_astronaut(id, name, age, sex, rocket) {
     const key = datastore.key([ASTRONAUTS, parseInt(id, 10)])
-    const astronaut = { name: name, age: age, sex: sex, rocketName: rocketName }
+    const astronaut = { name: name, age: age, sex: sex, rocket: rocket }
     return datastore.save({ key: key, data: astronaut }).then(() => {
         var selfUrl = `${baseUrl}/astronauts/${key.id}`
-        const new_data = { name: name, age: age, sex: sex, rocketName: rocketName, self: selfUrl }
+        const new_data = { name: name, age: age, sex: sex, rocket: rocket, self: selfUrl }
         datastore.save({ key: key, data: new_data }).then(() => {
         })
         return key
@@ -157,12 +157,12 @@ router.patch('/:id', function(req, res) {
             if (req.body.sex == null) {
                 req.body.sex = astronaut[0].sex
             }
-           var rocketName = astronaut[0].rocketName
-           if (rocketName == null) {
-               rocketName = undefined
+           var rocket = astronaut[0].rocket
+           if (rocket == null) {
+               rocket = undefined
            }
-            patch_astronaut(id, req.body.name, req.body.age, req.body.sex, req.body.rocketName).then((key) => {
-                res.status(200).json({ id: key.id, name: req.body.name, age: req.body.age, sex: req.body.sex, rocket: rocketName, self: selfUrl })
+            patch_astronaut(id, req.body.name, req.body.age, req.body.sex, req.body.rocket).then((key) => {
+                res.status(200).json({ id: key.id, name: req.body.name, age: req.body.age, sex: req.body.sex, rocket: rocket, self: selfUrl })
             })
         }
 
@@ -198,8 +198,8 @@ router.patch('/:id/rockets/:rocket_id', function(req, res) {
             var name = astronaut[0].name
             var age = astronaut[0].age
             var sex = astronaut[0].sex
-            if (astronaut[0].rocketName != null) {
-                var rocket_id_2 = astronaut[0].rocketName
+            if (astronaut[0].rocket != null) {
+                var rocket_id_2 = astronaut[0].rocket
                 get_rocket(rocket_id_2).then((rocket2) => {
                     var rocket_name_2 = rocket2[0].name
                     var rocket_price_2 = rocket2[0].price
@@ -229,16 +229,16 @@ router.put('/:id', function(req, res) {
         res.status(415).send('Can only accept application/json data type')
     }
     get_astronaut(id).then((astronaut) => {
-       var rocketName = astronaut[0].rocketName
-       if (rocketName == null) {
-           rocketName = undefined
+       var rocket = astronaut[0].rocket
+       if (rocket == null) {
+           rocket = undefined
        }
         if (astronaut[0] == null) {
             res.status(404).send('An astronaut with this id does not exist.')
         } else {
-            put_astronaut(id, req.body.name, req.body.price, req.body.weight, rocketName).then((key) => {
+            put_astronaut(id, req.body.name, req.body.price, req.body.weight, rocket).then((key) => {
                 console.log(key)
-                res.status(200).json({ id: key.id, name: req.body.name, price: req.body.price, weight: req.body.weight, rocket: rocketName, self: selfUrl })
+                res.status(200).json({ id: key.id, name: req.body.name, price: req.body.price, weight: req.body.weight, rocket: rocket, self: selfUrl })
             })
         }
     })
@@ -251,7 +251,7 @@ router.delete('/:id', function(req, res) {
         if (astronaut[0] == null) {
             res.status(404).json({ Error: 'No astronaut with this id exists'})
         } else {
-            var rocket_id = astronaut[0].rocketName
+            var rocket_id = astronaut[0].rocket
             if (rocket_id != null) {
                 get_rocket(rocket_id).then((rocket) => {
                     var rocket_name = rocket[0].name
@@ -287,8 +287,8 @@ router.delete('/:id/rockets', function (req, res) {
         var name = astronaut[0].name
         var age = astronaut[0].age
         var sex = astronaut[0].sex
-        var rocket_id = astronaut[0].rocketName
-        astronaut[0].rocketName = null
+        var rocket_id = astronaut[0].rocket
+        astronaut[0].rocket = null
         if (rocket_id != null) {
             get_rocket(rocket_id).then((rocket) => {
                 var rocket_name = rocket[0].name
